@@ -1,0 +1,13 @@
+-mapfile ./src/Beagle.Phased.Group2.1k.map  -pedfile ./src/Beagle.Phased.Group2.1k.ped -outfile BEAGLE_OUT -bin_out -bits 20 -err_hom 0 -err_het 0 -min_m 3 -homoz  -w_extend -h_extend
+
+
+-hap ./src/Test.hap -gen ./src/Test.gen -sample ./src/Test.sample -outfile BEAGLE_OUT -bin_out -bits 20 -err_hom 0 -err_het 0 -min_m 3 -homoz  -w_extend -h_extend
+
+
+
+
+
+-mapfile ./Test.map  -pedfile ./src/Test.ped -outfile BEAGLE_OUT -bin_out -bits 20 -err_hom 0 -err_het 0 -min_m 3 -homoz  -w_extend -h_extend
+
+
+-count.gap.errors TRUE -emp-pie-threshold 0.015 -pedfile ./src/Beagle.Phased.Group2.1k.ped -mapfile ./src/Beagle.Phased.Group2.1k.map  -bits 20 -err_hom 0 -err_het 0 -min_m 3 -homoz  -w_extend  -h_extend  -min_cm 3 -min_snp 64 -window 50 -gap 100 -output-type finalOutput  -ma-threshold 0.2 -log-file logs
