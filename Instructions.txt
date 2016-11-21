@@ -1,0 +1,30 @@
+#How to compile:
+
+In the FISHR2 directory execute the following:
+./compile.sh
+
+This will compile the following 3 programs:
+- FISHR2
+- IE_CALCULATOR utility
+- PARAMETER_FINDER utility
+
+Incase there are some errors compile one or more of the above programs, you can safely compile each of them individually:
+
+- To compile FISHR2
+make FISHR2
+
+- To compile IE_CALCULATOR
+make IE_CALCULATOR
+
+- To compile  PARAMETER_FINDER
+make PARAMETER_FINDER
+
+
+Known Issues / Solutions:
+- Don't have git installed, see the "To Download" above for instructions.
+- Boost libraries missing:
+FIX: sudo apt-get install libboost-all-dev.
+Use the commmand above to install boost in your Unix/mac system.
+
+- If thre's a problem installing boost, there is a binary  file called 'FISHR2' already included. You needn't compile it. You can just start using it. See the Samples in README.md.
+
