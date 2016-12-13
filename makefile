@@ -7,5 +7,8 @@ PARAMETER_FINDER:
 IE_CALCULATOR:
 	g++ -O2 -w -I /work/KellerLab/opt/bin/include -o ./utilities/ie_calculator_binaries/ie_calculator ./utilities/ie_calculator/src/IBG-ProjectFISHR-B.cpp ./utilities/ie_calculator/src/HandleFlags.cpp ./utilities/ie_calculator/src/ReadFiles.cpp ./utilities/ie_calculator/src/Compute.cpp ./utilities/ie_calculator/src/Ibd.cpp ./utilities/ie_calculator/src/Bmid.cpp ./utilities/ie_calculator/src/Ped.cpp 
 
+GAP:
+	g++ -O2 -w -std=c++0x ./utilities/gap/gap.cpp -o ./utilities/gap_binaries/gap
+
 clean:
 	rm -rf ./binaries/FISHR2 ./utilities/parameter_finder_binaries/parameter_finder ./utilities/ie_calculator_binaries/ie_calculator
