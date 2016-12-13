@@ -1026,88 +1026,61 @@ void ErrorCalculator::finalOutPut(int pers1,int pers2,int snp1,int snp2, float m
 					status = ma_het(pers1, pers2, snp1, snp2,  min_cm);
 
 					if (status[0] && status[1])	// status 1 stands for ibd4
-					{
-						std::cout<<"IBD4"<<std::endl;
-						return;
-						//check for ibd4
-					}
+						{
+							std::cout<<"IBD4"<<std::endl;
+							return;
+							//check for ibd4
+						}
 					if (status[0])
-					{
-						std::cout<<"IBD2"<<std::endl;
-						return;
-					}
-					else
-					{
-						std::cout<<"NA"<<std::endl;
-					}
-
-
-
-
-					// work on this part
-/*					if ((status[0] == false)&&(status[1] == false)	)
-					{
-						//check for ibd2<NM>
-						status.clear();
-						status = ma_het_nm(pers1, pers2, snp1, snp2,  min_cm);
-						if (status[0])
 						{
 							std::cout<<"IBD2"<<std::endl;
-						}
-						else
-						{
-							std::cout<<"NA"<<endl;
 							return;
 						}
-					}*/
+			/*		else
+						{
+							std::cout<<"NA"<<std::endl;
+						}*/
+
+					if ((status[0] == false)&&(status[1] == false)	)
+						{
+							status.clear();
+							bool status;
+							status = ma_het_nm(pers1, pers2, snp1, snp2,  min_cm);
+							if (status)
+							{
+								std::cout<<"IBD2"<<std::endl;
+							}
+							else
+							{
+								std::cout<<"NA"<<endl;
+								return;
+							}
+						}
 				 }
 }
 
 
-
-std::vector<bool> ErrorCalculator::ma_het_nm(int pers1,int pers2,int snp1,int snp2, float min_cm)	//No NM required. Just send (11,21), (11,22),(12,21),(12,22) to het and test for max of them > threashold
+bool ErrorCalculator::ma_het_nm(int pers1,int pers2,int snp1,int snp2, float min_c)
 {
-
 	std::string pers1dnasnp1 = seperateSNP(PED[pers1].dnasequence, 0, PED[pers1].dnasequence.length(),0);
 	std::string pers1dnasnp2 = seperateSNP(PED[pers1].dnasequence, 0, PED[pers1].dnasequence.length(),1);
 	std::string pers2dnasnp1 = seperateSNP(PED[pers2].dnasequence, 0, PED[pers2].dnasequence.length(),0);
 	std::string pers2dnasnp2 = seperateSNP(PED[pers2].dnasequence, 0, PED[pers2].dnasequence.length(),1);
+	std::vector <double> indices = returnhighest_nm(pers1dnasnp1, pers1dnasnp2, pers2dnasnp1, pers2dnasnp2, snp1, snp2);	//index[2] has the highest cm dist value
 
-
-
-/*	cerr<<pers1dnasnp1<<endl;
-	cerr<<pers1dnasnp2<<endl;
-	cerr<<pers2dnasnp1<<endl;
-	cerr<<pers2dnasnp2<<endl;*/
-
-	std::vector <double> indices1 = returnhighest(pers1dnasnp1,pers2dnasnp1,snp1,snp2) ;//snpindexBegin, snpindexEnd, maxcount index 0,1,2 respectively
-	std::vector <double> indices2 = returnhighest(pers1dnasnp1,pers2dnasnp2,snp1,snp2); // ^^
-	std::vector <double> indices3 = returnhighest(pers1dnasnp2,pers2dnasnp1,snp1,snp2);
-	std::vector <double> indices4 = returnhighest(pers1dnasnp2,pers2dnasnp2,snp1,snp2);
-
-
-
-	std::vector<bool> status; // 1 value. true means it's ibd2 else it's not ibd2
-	//std::cerr<<indices1[2]<<"\t"<<indices2[2]<<"\t"<<indices3[2]<<"\t"<<indices4[2]<<endl;
-
-	if (	max(max(indices1[2],indices2[2]),max(indices3[2],indices4[2])) >= IBD_THRESHOLD )
+	if (indices[2]< min_c )
 	{
-		status.push_back(true);
-
+		return false;
 	}
 	else
 	{
-		status.push_back(false);
+		return true;
 	}
 
-/*	std::cerr<<indices1[2]<<endl;
-	std::cerr<<indices2[2]<<endl;*/
-return status;
+
 
 
 }
-
-
 
 std::vector<bool> ErrorCalculator::ma_het(int pers1,int pers2,int snp1,int snp2, float min_cm)	//No NM required. Just send (11,21), (11,22),(12,21),(12,22) to het and test for max of them > threashold
 {
@@ -1117,89 +1090,36 @@ std::vector<bool> ErrorCalculator::ma_het(int pers1,int pers2,int snp1,int snp2,
 	std::string pers2dnasnp1 = seperateSNP(PED[pers2].dnasequence, 0, PED[pers2].dnasequence.length(),0);
 	std::string pers2dnasnp2 = seperateSNP(PED[pers2].dnasequence, 0, PED[pers2].dnasequence.length(),1);
 
-/*	std::cerr<<PED[pers1].dnasequence.length()<<endl;
-	std::cerr<<PED[pers1].dnasequence<<endl;*/
-
-/*	std::cerr<<pers1dnasnp1<<endl;
-	std::cerr<<pers1dnasnp2<<endl;
-	std::cerr<<pers2dnasnp1<<endl;
-	std::cerr<<pers2dnasnp2<<endl;
-
-	std::cerr<<pers1dnasnp1.length()<<endl;
-
-
-	std::cerr<<snp2 - snp1<<endl;*/
-
-/*	std::string temp = "";
-	for (int i = snp1 ; i <=snp2; i++)
-		{
-		temp+=pers1dnasnp1[i];
-			//std::cerr<<pers1dnasnp1[i];
-		}
-	std::cerr<<temp<<endl;
-
-
-	temp = "";
-	for (int i = snp1 ; i <=snp2; i++)
-		{
-			temp+=pers1dnasnp2[i];
-		}
-	std::cerr<<temp<<endl;
-
-	temp = "";
-	for (int i = snp1 ; i <=snp2; i++)
-		{
-		temp+=pers2dnasnp1[i];
-		}
-	std::cerr<<temp<<endl;
-
-	temp = "";
-	for (int i = snp1 ; i <=snp2; i++)
-		{
-		temp+=pers2dnasnp2[i];
-		}
-	std::cerr<<temp<<endl;*/
-
-
-
-
-	std::vector <double> indices1 = returnhighest(pers1dnasnp1,pers1dnasnp2,snp1,snp2) ;//snpindexBegin, snpindexEnd, maxcount index 0,1,2 respectively
-	std::vector <double> indices2 = returnhighest(pers2dnasnp1,pers2dnasnp2,snp1,snp2); // ^^
+	std::vector <double> indices1 = returnhighest_het(pers1dnasnp1,pers1dnasnp2,snp1,snp2) ;//snpindexBegin, snpindexEnd, maxcount index 0,1,2 respectively
+	std::vector <double> indices2 = returnhighest_het(pers2dnasnp1,pers2dnasnp2,snp1,snp2); // ^^
 
 	std::vector<bool> status; // 2 values. 0 contains information about,  if ibd2 <withoutNM>, is true or false and  1 contains information about ibd4 is true or false
 
-/*	std::cerr<<indices1[2]<<endl;
-	std::cerr<<indices2[2]<<endl;
-	std::cout<<IBD_THRESHOLD<<endl;*/
+	//std::cerr<<indices1[2]<<std::endl;
 
 	if (max(indices1[2],indices2[2]) >= IBD_THRESHOLD )
-	{
-		status.push_back(true);
-		if (min(indices1[2],indices2[2]) >= IBD_THRESHOLD )
 		{
 			status.push_back(true);
+			if (min(indices1[2],indices2[2]) >= IBD_THRESHOLD )
+				{
+					status.push_back(true);
+				}
+			else
+				{
+					status.push_back(false);
+				}
 		}
-		else
+	else // if ibd2 <withoutNM>, if it ain't ibd2<withoutNM>, then it ain't ibd4
 		{
 			status.push_back(false);
+			status.push_back(false);
 		}
-	}
-	else // if ibd2 <withoutNM>, if it ain't ibd2<withoutNM>, then it ain't ibd4
-	{
-		status.push_back(false);
-		status.push_back(false);
-	}
 
-/*	std::cerr<<indices1[2]<<endl;
-	std::cerr<<indices2[2]<<endl;*/
-return status;
-
-
+	return status;
 }
 
 std::string ErrorCalculator::seperateSNP(std::string dnasequence,int zero,int length,int snp1_or_snp2 ) //snp1_or_snp2 --->0 is snp1, 1 is snp2
 {
-	int dnalength = dnasequence.length();
 	std::string concat = "";
 	if (snp1_or_snp2 == 0)
 		{
@@ -1214,7 +1134,7 @@ std::string ErrorCalculator::seperateSNP(std::string dnasequence,int zero,int le
 	return concat;
 }
 
-std::vector<double> ErrorCalculator::returnhighest(std::string s1,std::string s2,int startIndex, int endIndex)
+std::vector<double> ErrorCalculator::returnhighest_het(std::string s1,std::string s2,int startIndex, int endIndex)
 {
 	double maxcount = 0.0 ;
 	double rcount = 0.0;
@@ -1276,7 +1196,68 @@ std::vector<double> ErrorCalculator::returnhighest(std::string s1,std::string s2
 
 	//std::cout<<snpindexBegin<<"\t"<<snpindexEnd<<"\t"<<maxcount<<std::endl;
 }
+std::vector<double> ErrorCalculator::returnhighest_nm(std::string s11,std::string s12,std::string s21,std::string s22,int startIndex, int endIndex)
+{
+	double maxcount = 0.0;
+	double rcount = 0.0;
+	int runningcount = 0;
+	int snpindexBegin = 0;
+	int snpindexBegin_temp = 0;
+	int snpindexEnd = 0;
+	int snpindexEnd_temp = 0;
+	std::string s1,s2;
+	std::vector <double> indices;//snpindexBegin, snpindexEnd, maxcount
 
+
+	for (int i = startIndex ; i <=endIndex; i++)
+	{
+		s1 = s11[i]+s12[i];
+		s2 = s21[i]+s22[i];
+		std::sort(s1.begin(), s1.end());
+		std::sort(s2.begin(), s2.end());
+
+
+		if ((s1!=s2 ) )
+			{
+				if (rcount > maxcount)
+				{
+					snpindexBegin = snpindexBegin_temp;
+					snpindexEnd = snpindexEnd_temp;
+					maxcount = rcount;
+				}
+					runningcount = 0;
+					rcount=0.0;
+			}
+		else if(s1==s2)
+			{
+				if (runningcount == 0)
+				{
+					snpindexBegin_temp = i;
+				}
+				else
+				{
+					snpindexEnd_temp = i;
+					rcount =  (marker_id[snpindexEnd_temp].cm_distance - marker_id[snpindexBegin_temp].cm_distance );
+				}
+				runningcount++;
+			}
+		if (	!((i+1)<=endIndex)	)
+			{
+				if (rcount > maxcount)
+					{
+						snpindexBegin = snpindexBegin_temp;
+						snpindexEnd = snpindexEnd_temp;
+						maxcount = rcount;
+					}
+			}
+	}
+
+	//std::cout<<snpindexBegin<<"\t"<<snpindexEnd<<"\t"<<maxcount<<std::endl;
+	indices.push_back(snpindexBegin);
+	indices.push_back(snpindexEnd);
+	indices.push_back(maxcount);
+	return indices;
+}
 /*std::vector<int> returnhighest(std::string s1,std::string s2,int startIndex, int endIndex)
 {
 	int maxcount = 0 ;

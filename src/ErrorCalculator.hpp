@@ -161,12 +161,16 @@ class ErrorCalculator
 
 
      std::vector<bool> ma_het(int pers1,int pers2,int snp1,int snp2, float min_cm);
-     std::vector<bool> ma_het_nm(int pers1,int pers2,int snp1,int snp2, float min_cm);
+     bool ma_het_nm(int pers1,int pers2,int snp1,int snp2, float min_cm);
+
+
+
 
      std::string seperateSNP(std::string,int snp1,int snp2,int snp1_or_snp2); // ACGGCCCT to AGCC and CGCT;snp1_or_snp2 implies either odd or even, even or(0) implies AGCC, odd or (1) implies CGCT
      void convertPedtovec(std::string path);
      std::vector<Marker>marker_id;
-     std::vector<double> returnhighest(std::string s1,std::string s2,int startIndex, int endIndex);
+     std::vector<double> returnhighest_het(std::string s1,std::string s2,int startIndex, int endIndex);
+     std::vector<double> returnhighest_nm(std::string s11,std::string s12,std::string s21,std::string s22,int startIndex, int endIndex);
 
 
      private:

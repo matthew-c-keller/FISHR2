@@ -22,6 +22,28 @@
 std::string Compute::samplefiletype = "NULL";
 std::vector<size_t> Compute::lenhaps_sample[2];
 double linearInterpolation( double x1,  double y1, double x3, double y3,  double x2);
+
+/*
+Compute::Compute(std::string hapfilename,std::string samplefilename, std::string genfilename, bool map_hap_only)
+{
+	haps2vec(hapfilename);
+	sample2vec(samplefilename);
+	checkintegrity();
+	createped(hapfilename);
+
+}
+*/
+
+Compute::Compute(std::string hapfilename,std::string samplefilename)
+{
+	haps2vec(hapfilename);
+	sample2vec(samplefilename);
+	checkintegrity();
+	createped(hapfilename);
+
+}
+
+
 Compute::Compute(std::string hapfilename,std::string samplefilename, std::string genfilename)
 {
 
@@ -45,7 +67,7 @@ if (lenhaps_sample[0][0] == lenhaps_sample[1][0])
 }
 else
 {
-	std::cout<<"INCONSISTENT SAMPLE AND HAP FILE... THE NUMBER OF PAIRS IN THE "<<
+	std::cerr<<"INCONSISTENT SAMPLE AND HAP FILE... THE NUMBER OF PAIRS IN THE "<<
 			   "HAPS FILE IS NOT EQUAL TO THE NUBER OF LINES IN THE SAMPLE FILE... EXITING "<<std::endl;
 	exit(0);
 }
@@ -133,7 +155,7 @@ void Compute::createped(std::string hapfilename)
 	std::ofstream fped(pedfilename.c_str());
 	if (!fped.is_open())
 	{
-		std::cout<<"ERROR: OUTPUT FILE CANNOT BE OPENED FOR PED DUMP...EXITING"<<std::endl;
+		std::cerr<<"ERROR: OUTPUT FILE CANNOT BE OPENED FOR PED DUMP...EXITING"<<std::endl;
 		exit(0);
 	}
 
@@ -199,7 +221,7 @@ void Compute::createped(std::string hapfilename)
 	}
 	else
 	{
-		std::cout<<"Check the consistency of the .hap file...Program exiting"<<std::endl;
+		std::cerr<<"Check the consistency of the .hap file...Program exiting"<<std::endl;
 		exit(0);
 	}
 	fped.close();
@@ -232,7 +254,7 @@ void Compute::haps2vec(std::string hapfilename)
 		}
 	else
 		{
-			std::cout<<hapfilename<<" : Hap file cannot be opened...Exiting "<<std::endl;
+			std::cerr<<hapfilename<<" : Hap file cannot be opened...Exiting "<<std::endl;
 			exit(0);
 		}
 
@@ -259,7 +281,7 @@ void Compute::sample2vec(std::string samplefilename)
 		}
 	else
 		{
-			std::cout<<samplefilename<<" : Sample file cannot be opened...Exiting "<<std::endl;
+			std::cerr<<samplefilename<<" : Sample file cannot be opened...Exiting "<<std::endl;
 			exit(0);
 		}
 
@@ -303,14 +325,16 @@ void Compute::sample2vec(std::string samplefilename)
 		{
 			samplefiletype = "7_COL";
 			std::getline(samplefile, line ); // get rid of 0 0 0 in the second row of the file
+			size_t countlines = 0;
 			if (samplefile.is_open())
 				{
 					while(std::getline(samplefile, line ))
 						{
+							countlines++;
 							ss<<line;
 							ss>>sample_7_col.ID_1;
 							ss>>sample_7_col.ID_2;
-							ss>>sample_7_col.father>>sample_3_col.father;
+							ss>>sample_7_col.father>>sample_7_col.father;
 							ss>>sample_7_col.mother;
 							ss>>sample_7_col.sex;
 							ss>>sample_7_col.plink_phemo;
@@ -319,6 +343,7 @@ void Compute::sample2vec(std::string samplefilename)
 							ss.clear();
 						}
 				}
+			lenhaps_sample[1].push_back(countlines);
 			samplefile.close();
 		}
 
@@ -358,7 +383,7 @@ void Compute::gen2vec(std::string genfilename	)
 		}
 	else
 		{
-			std::cout<<genfilename<<" : gen file file cannot be opened...Exiting "<<std::endl;
+			std::cerr<<genfilename<<" : gen file file cannot be opened...Exiting "<<std::endl;
 			exit(0);
 		}
 

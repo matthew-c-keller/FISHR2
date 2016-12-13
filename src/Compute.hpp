@@ -23,10 +23,12 @@ private:
 	std::vector<Gen> GEN;
 	std::vector<Sample_3_col> SAMPLE_3_COL;
 	std::vector<Sample_7_col> SAMPLE_7_COL;
+	bool map_hap_only;
 
 public:
 
 	Compute(std::string hapfilename,std::string samplefilename, std::string genfilename);
+	Compute(std::string hapfilename,std::string samplefilename);
 	void haps2vec(std::string hapfilename);
 	void sample2vec(std::string samplefilename);
 	void gen2vec(std::string genfilename);

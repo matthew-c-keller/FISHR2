@@ -79,11 +79,11 @@ int main(int argc, char* argv[])
 	grade_list["-w_extend"] = "NULL";
 	grade_list["-no_suffix"] = "NULL";
 	//grade_list["-reduced"] = "NULL";
-	grade_list["-hapfile"] = "NULL";
-	grade_list["-genfile"] = "NULL";
+	grade_list["-hapsfile"] = "NULL";
+	grade_list["-geneticmapfile"] = "NULL";
 	grade_list["-samplefile"] = "NULL";
 	grade_list["-germline_output"] = "NULL";
-	grade_list["-ibd"] = "NULL";
+	grade_list["-ibd2"] = "NULL";
 
 	//-mapfile ./src/Test.map  -pedfile ./src/Test.ped -outfile BEAGLE_OUT -bin_out -bits 20 -err_hom 0 -err_het 0 -min_m 3 -homoz  -w_extend -h_extend
 	std::map <std::string, std::string> grade_list2;
@@ -133,8 +133,17 @@ int main(int argc, char* argv[])
 		string temp = argv[i];
 		if (argc == 1)
 		{
-			cerr<<"Error: No inputs provided. Exiting"<<endl;
-			exit(0);
+				cerr<<endl;
+				cerr<<"***********************************************************************************"<<endl;
+				cerr<<"*                        FISHR2 (Genetic Analysis Program)                        *"<<endl;
+				cerr<<"*                                  				                                 *"<<endl;
+				cerr<<"*                (C) 2014  Matthew C. Keller, Doug Bjelland, Piyush Sudip Patel   *"<<endl;
+				cerr<<"*                    Institute for Behavioral Genetics (IBG)                      *"<<endl;
+				cerr<<"*                       University of Colorado at Boulder                         *"<<endl;
+				cerr<<"***********************************************************************************"<<endl;
+				cerr<<"****************************\"./gap -help\" for Usage *****************************"<<endl;
+				cerr<<endl;
+			    exit(0);
 		}
 		if( strcmp(argv[i], "-help") == 0 )
 		{
@@ -199,7 +208,7 @@ int main(int argc, char* argv[])
 				  //std::cout<<argv[i]<<std::endl;
 				  glcopy[glcopycount] = new char[strlen(argv[i])+1];	strcpy(glcopy[glcopycount],argv[i]);	glcopycount++;
 			  }
-			  else if( strncmp(argv[i], "-ibd", strlen("-ibd")) == 0)
+			  else if( strncmp(argv[i], "-ibd2", strlen("-ibd2")) == 0)
 			  {
 				  i++;
 				  //std::cout<<argv[i]<<std::endl;
@@ -252,12 +261,12 @@ int main(int argc, char* argv[])
 			  //std::cout<<argv[i]<<std::endl;
 			  glcopy[glcopycount] = new char[strlen(argv[i])+1];	strcpy(glcopy[glcopycount],argv[i]);	glcopycount++;
 			  }
-			  else if (strncmp(argv[i], "-hapfile", strlen("-hapfile")) == 0)
+			  else if (strncmp(argv[i], "-hapsfile", strlen("-hapsfile")) == 0)
 			  {i++;
 			 // std::cout<<argv[i]<<std::endl;
 			  glcopy[glcopycount] = new char[strlen(argv[i])+1];	strcpy(glcopy[glcopycount],argv[i]);	glcopycount++;
 			  }
-			  else if (strncmp(argv[i], "-genfile", strlen("-genfile")) == 0)
+			  else if (strncmp(argv[i], "-geneticmapfile", strlen("-geneticmapfile")) == 0)
 			  {i++;
 			  //std::cout<<argv[i]<<std::endl;
 			  glcopy[glcopycount] = new char[strlen(argv[i])+1];	strcpy(glcopy[glcopycount],argv[i]);	glcopycount++;			  }
@@ -374,47 +383,45 @@ exit(0);
 
 for (int i = 0; i < argc ; i++)
 	{
-	if ((strcmp(argv[i],"-low_ram")==0))
+
+		if ((strcmp(argv[i],"-low_ram")==0))
+			{
+				lowramflag = 1;
+			}
+
+	if (i==0)
+		{
+			fishrcopy[fishrcopycount] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[fishrcopycount],argv[i]);	fishrcopycount++;
+		}
+
+
+	if (grade_list2.count(argv[i]))
 	{
-		lowramflag = 1;
+		//std::cout<<argv[i]<<std::endl;
+		fishrcopy[fishrcopycount] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[fishrcopycount],argv[i]);	fishrcopycount++;
+
+	  if (	(strcmp(argv[i],"-extendSNP")==0) || (strcmp(argv[i],"-bmatch")==0) || (strcmp(argv[i],"-bmid")==0) ||
+			(strcmp(argv[i],"-bsid")==0) || (strcmp(argv[i],"-ped-file")==0) || (strcmp(argv[i],"-holdout-ped")==0)	||
+			(strcmp(argv[i],"-holdout-map")==0) || (strcmp(argv[i],"-window")==0) || (strcmp(argv[i],"-holdout-threshold")==0) ||
+			(strcmp(argv[i],"-trueCM")==0) || ( strcmp( argv[i],"-trueSNP" )==0) || (strcmp(argv[i],"-holdout-missing")==0) ||
+			(strcmp(argv[i],"-gap")==0) || (strcmp(argv[i],"-ma-snp")==0) || (strcmp(argv[i],"-pct-err-threshold")==0) ||
+			(strcmp(argv[i],"-emp-pie-threshold")==0) || (strcmp(argv[i],"-output-type")==0) || (strcmp(argv[i], "-snpfile") ==0) ||
+			(strcmp(argv[i],"-log-file")==0) || (strcmp(argv[i],"-ma-threshold")==0) ||(strcmp(argv[i],"-empirical-ma-threshold")==0 ) ||
+			(strcmp(argv[i],"-PIE.dist.length")==0) || (strcmp(argv[i],"-count.gap.errors")==0 ) ||  (strcmp(argv[i],"-min_cm_final")==0  ) ||
+			(strcmp(argv[i],"-min_snp")==0))
+				  {
+					  i++;
+					  //std::cout<<argv[i]<<std::endl;
+					  //fishrcopy[i] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[i],argv[i]);	fishrcopycount++;
+					  fishrcopy[fishrcopycount] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[fishrcopycount],argv[i]);	fishrcopycount++;
+
+				  }
 	}
-
-if (i==0)
-{
-	fishrcopy[fishrcopycount] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[fishrcopycount],argv[i]);	fishrcopycount++;
-}
-
-
-if (grade_list2.count(argv[i]))
-{
-	//std::cout<<argv[i]<<std::endl;
-
-
-
-	fishrcopy[fishrcopycount] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[fishrcopycount],argv[i]);	fishrcopycount++;
-
-  if (	(strcmp(argv[i],"-extendSNP")==0) || (strcmp(argv[i],"-bmatch")==0) || (strcmp(argv[i],"-bmid")==0) ||
-		(strcmp(argv[i],"-bsid")==0) || (strcmp(argv[i],"-ped-file")==0) || (strcmp(argv[i],"-holdout-ped")==0)	||
-		(strcmp(argv[i],"-holdout-map")==0) || (strcmp(argv[i],"-window")==0) || (strcmp(argv[i],"-holdout-threshold")==0) ||
-		(strcmp(argv[i],"-trueCM")==0) || ( strcmp( argv[i],"-trueSNP" )==0) || (strcmp(argv[i],"-holdout-missing")==0) ||
-		(strcmp(argv[i],"-gap")==0) || (strcmp(argv[i],"-ma-snp")==0) || (strcmp(argv[i],"-pct-err-threshold")==0) ||
-		(strcmp(argv[i],"-emp-pie-threshold")==0) || (strcmp(argv[i],"-output-type")==0) || (strcmp(argv[i], "-snpfile") ==0) ||
-		(strcmp(argv[i],"-log-file")==0) || (strcmp(argv[i],"-ma-threshold")==0) ||(strcmp(argv[i],"-empirical-ma-threshold")==0 ) ||
-		(strcmp(argv[i],"-PIE.dist.length")==0) || (strcmp(argv[i],"-count.gap.errors")==0 ) ||  (strcmp(argv[i],"-min_cm_final")==0  ) ||
-		(strcmp(argv[i],"-min_snp")==0))
-			  {
-				  i++;
-				  //std::cout<<argv[i]<<std::endl;
-				  //fishrcopy[i] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[i],argv[i]);	fishrcopycount++;
-				  fishrcopy[fishrcopycount] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[fishrcopycount],argv[i]);	fishrcopycount++;
-
-			  }
-}
-else
-{
-	//fishrcopy[i] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[i]," ");	fishrcopycount++;
-	continue;
-}
+	else
+	{
+		//fishrcopy[i] = new char[strlen(argv[i])+1];	strcpy(fishrcopy[i]," ");	fishrcopycount++;
+		continue;
+	}
 }
 //exit(0);
 
@@ -481,14 +488,14 @@ string germline_output = "./";
 			GERMLINE_OUTPUT = true;
 			germline_output = glcopy[++i];
 		}
-		else if ( strncmp(glcopy[i], "-ibd", strlen("-ibd")) == 0 )
+		else if ( strncmp(glcopy[i], "-ibd2", strlen("-ibd2")) == 0 )
 		{
 			IBD = true;
 			IBD_THRESHOLD = atof(glcopy[++i]);
 		}
 
-		else if (strncmp(glcopy[i], "-hapfile", strlen("-hapfile")) == 0)			HAPFILE = glcopy[++i];
-		else if (strncmp(glcopy[i], "-genfile", strlen("-genfile")) == 0)			GENFILE = glcopy[++i];
+		else if (strncmp(glcopy[i], "-hapsfile", strlen("-hapsfile")) == 0)			HAPFILE = glcopy[++i];
+		else if (strncmp(glcopy[i], "-geneticmapfile", strlen("-geneticmapfile")) == 0)			GENFILE = glcopy[++i];
 		else if (strncmp(glcopy[i], "-samplefile", strlen("-samplefile")) == 0)	SAMPLEFILE = glcopy[++i];
 		else
                 {
@@ -501,7 +508,7 @@ string germline_output = "./";
 if (IBD && (IBD_THRESHOLD == -1.0))
 {
 	bad_param = true;
-	std::cerr<<"-ibd <value>";
+	std::cerr<<"-ibd2 <value>";
 }
 	//BINARY_OUT = true;	//Should always be true
 
@@ -535,8 +542,8 @@ if (IBD && (IBD_THRESHOLD == -1.0))
 		else if( strncmp(argv[i], "-no_suffix", strlen("-no_suffix")) == 0 )                                      NO_SUFFIX = true;
 		else if( strncmp(argv[i], "-reduced", strlen("-reduced")) == 0 )                                      REDUCE = true;
 
-		else if (strncmp(argv[i], "-hapfile", strlen("-hapfile")) == 0)			HAPFILE = argv[++i];
-		else if (strncmp(argv[i], "-genfile", strlen("-genfile")) == 0)			GENFILE = argv[++i];
+		else if (strncmp(argv[i], "-hapsfile", strlen("-hapsfile")) == 0)			HAPFILE = argv[++i];
+		else if (strncmp(argv[i], "-geneticmapfile", strlen("-geneticmapfile")) == 0)			GENFILE = argv[++i];
 		else if (strncmp(argv[i], "-samplefile", strlen("-samplefile")) == 0)	SAMPLEFILE = argv[++i];
 		else
                 {
@@ -549,26 +556,49 @@ if (IBD && (IBD_THRESHOLD == -1.0))
 //std::cout<<params<<std::endl;
 	//exit(0);
 
-	if (HAPFILE == "" && GENFILE == ""	 && SAMPLEFILE == "")
+/*
+	if (PEDFILE!="" && MAPFILE!="")
+	{
+
+	}
+*/
+
+/*
+
+	else if (HAPFILE!="" &&  MAPFILE!="" && SAMPLEFILE!=""  )	//if hapfiel and mapfile is provided
+	{
+		OUTFILE =  HAPFILE.substr(0,HAPFILE.find_last_of("."));
+		Compute compute(HAPFILE, SAMPLEFILE, GENFILE,true );
+		PEDFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".ped";
+	}
+
+
+	else	if (HAPFILE == "" && GENFILE == ""	 && SAMPLEFILE == "")
 	{
 
 	}
 	else
 	{
-		if (HAPFILE == "" || GENFILE == ""	 || SAMPLEFILE == "" || PEDFILE!= "" || MAPFILE!="" )
-		{
-			std::cerr<<" If providing input file in .hap format, must include .hap, .gen and .sample file. If providing .ped file, must also include .map file .Program exiting"<<std::endl;
-			exit(0);
-		}
-
-		else
-		{
-			OUTFILE =  HAPFILE.substr(0,HAPFILE.find_last_of("."));
-			Compute compute(HAPFILE, SAMPLEFILE, GENFILE );
-			PEDFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".ped";
-			MAPFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".map";
-		}
+	else if ( !(HAPFILE == "" || GENFILE == ""	 || SAMPLEFILE == "" || PEDFILE!= "" || MAPFILE!="" ))
+	{
+		std::cerr<<" If providing input file in .hap format, must include .hap and .sample file. If providing .ped file, must also include .map file .Program exiting"<<std::endl;
+		exit(0);
 	}
+
+	else
+	{
+		OUTFILE =  HAPFILE.substr(0,HAPFILE.find_last_of("."));
+		Compute compute(HAPFILE, SAMPLEFILE, GENFILE );
+		PEDFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".ped";
+		MAPFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".map";
+	}
+
+
+
+
+
+
+	//}
 
 
 	if (HAPFILE == "" && GENFILE == ""	 && SAMPLEFILE == "" && PEDFILE== "" && MAPFILE=="" )
@@ -576,7 +606,89 @@ if (IBD && (IBD_THRESHOLD == -1.0))
 		std::cerr<<"No Input file provided.. Exiting"<<std::endl;
 		exit(0);
 	}
+*/
+bool input = false; // (HAPFILE,GENFILE,SAMPLEFILE) or (HAPFILE, MAPFILE) or (PEDFILE, MAPFILE)
+
+
+/*
+if (HAPFILE == "" && GENFILE == ""	 && SAMPLEFILE == "")
+{
+
+
+}
+else
+{
+	if (HAPFILE == "" || GENFILE == ""	 || SAMPLEFILE == "" || PEDFILE!= "" || MAPFILE!="" )
+	{
+		std::cerr<<" If providing input file in .hap format, must include .hap, .gen and .sample file. If providing .ped file, must also include .map file .Program exiting"<<std::endl;
+		exit(0);
+	}
+
+	else
+	{
+		OUTFILE =  HAPFILE.substr(0,HAPFILE.find_last_of("."));
+		Compute compute(HAPFILE, SAMPLEFILE, GENFILE );
+		PEDFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".ped";
+		MAPFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".map";
+	}
+}
+*/
+
+
+
+
+
+
+
+
+if (HAPFILE == "" && GENFILE == ""	 && SAMPLEFILE == "" && PEDFILE== "" && MAPFILE=="" )
+{
+	std::cerr<<"No Input file provided.. Exiting"<<std::endl;
+	exit(0);
+}
+
+if (HAPFILE!="" && MAPFILE!="" && SAMPLEFILE!="")
+{
+	OUTFILE =  HAPFILE.substr(0,HAPFILE.find_last_of("."));
+	Compute compute(HAPFILE, SAMPLEFILE );
+	PEDFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".ped";
+
+}
+else if (HAPFILE!="" && SAMPLEFILE!="" && GENFILE!="")
+{
+	OUTFILE =  HAPFILE.substr(0,HAPFILE.find_last_of("."));
+	Compute compute(HAPFILE, SAMPLEFILE, GENFILE );
+	PEDFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".ped";
+	MAPFILE = HAPFILE.substr(0,HAPFILE.find_last_of("."))+".map";
+
+}
+else
+{
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 if (OUTFILE == "")
+{
+
+	OUTFILE =  PEDFILE.substr(0,PEDFILE.find_last_of("."));
+	//std::cout<<OUTFILE<<std::endl;
+	//exit(0);
+}
+
+
+	if (OUTFILE == "")
 	{
 
 		OUTFILE =  PEDFILE.substr(0,PEDFILE.find_last_of("."));
@@ -836,17 +948,85 @@ bool isInteger(const std::string s)
 
    return (*p == 0) ;
 }
-
-
 void helpShowParameters()
+{
+	cerr<<endl;
+					cerr<<"***********************************************************************************"<<endl;
+					cerr<<"*                        FISHR2 (Genetic Analysis Program)                        *"<<endl;
+					cerr<<"*                                  				                                 *"<<endl;
+					cerr<<"*                (C) 2014  Matthew C. Keller, Doug Bjelland, Piyush Sudip Patel   *"<<endl;
+					cerr<<"*                    Institute for Behavioral Genetics (IBG)                      *"<<endl;
+					cerr<<"*                       University of Colorado at Boulder                         *"<<endl;
+					cerr<<"***********************************************************************************"<<endl;
+					cerr<<endl<<endl<<endl;
+cerr<<"*For sample inputs please refer the README.md file*"<<endl<<endl;
+cerr<< "List of commands:" << endl;
+cerr<<"-pedfile"<<"\n\t-pedfile [pedfile ]"<<endl;
+cerr<<"-mapfile"<<"\n\t-mapfile [mapfile ]"<<endl;
+cerr<<"-geneticmapfile"<<"\n\t-geneticmapfile [geneticmapfile ]"<<endl;
+cerr<<"-samplefile"<<"\n\t-samplefile [samplefile ]"<<endl;
+cerr<<"-hapsfile"<<"\n\t-hapsfile [hapsfile ]"<<endl;
+
+cerr<<"\n***************************************************************\n"<<endl;
+
+cerr<<"-silent"<<"\n\tSuppress all output except for warnings and prompts."<<endl;
+cerr<<"-bin_out"<<"\n\tOutput in binary format to save space."<<endl;
+cerr<<"-min_cm_initial"<<"\n\tMinimum length for match to be used for imputation (in cM or MB)."<<endl;
+cerr<<"-err_hom"<<"\n\tMaximum number of mismatching homozygous markers (per slice)."<<endl;
+cerr<<"-err_het"<<"\n\tMaximum number of mismatching heterozygous markers (per slice)."<<endl;
+cerr<<"-from_snp"<<"\n\tStart SNP (rsID)."<<endl;
+cerr<<"-to_snp"<<"\n\tEnd SNP (rsID)."<<endl;
+cerr<<"-map"<<"\n\tGenetic distance map."<<endl;
+cerr<<"-bits"<<"\n\tSlice size."<<endl;
+cerr<<"-homoz"<<"\n\tAllow self matches (homozygosity)."<<endl;
+cerr<<"-homoz-only"<<"\n\tLook for autozygous/homozygous segments only, does not detect IBD."<<endl;
+cerr<<"-haploid"<<"\n\tTreat input individual as two fully phased chromosomes with no recombination\n\t\toutput IDs with 0/1 suffix for chromosome destinction."<<endl;
+cerr<<"-h_extend"<<"\n\tExtend from seeds if *haplotypes* match."<<endl;
+cerr<<"-w_extend"<<"\n\tExtend, one marker at a time, beyond the boundaries of a found match."<<endl;
+cerr<<"-reduced"<<"\n\tOutput only reduced elements."<<endl;
+cerr<<"-no_suffix"<<"\n\tUse with -haploid to output the cell with no .0 or .1 suffix."<<endl;
+cerr<<"-err_w"<<"\n\tUse with -wextend to allow error matches like 1,2,3 etc in extending"<<endl;
+cerr<<"-hapsfile"<<"\n\tIf using hap file, use this flag. usuage: -hapsfile <hapfilename.hap>  Must also supply \".samplefile\" and \".mapfile\" file using flags -samplefile and -mapfile"<<endl;
+cerr<<"-samplefile"<<"\n\tIf using hapsfile, use this flag for the corresponding sample file. usage: -samplefile <samplefilename.sample>  Must also supply \".hapsfile\" and \".mapfile\" file using flags"<<endl;
+//cerr<<"-geneticmapfile"<<"\n\tOutput only reduced elements."<<endl;
+//<<'\t'	<< "-geneticmapfile"	 <<'\t'	 << "if using hap file, use this flag to supply the corresponding gen file. usuage: -geneticmapfile <genfile.gen>  Must also supply \".hap\" and \".sample\" file using flags -hapsfile and -sample"<< endl
+//<<"\n"<<endl
+cerr<<"-window"<<"\n\t-window value[window width to calculate moving averages]"<<endl;
+cerr<<"-ibd2"<<"\n\t-ibd2 <threshold value> \tCompute ibd2 and ibd4"<<endl;
+cerr<<"-log-file"<<"\n\t-log-file [log file name]"<<endl;
+
+
+
+cerr<<"-gap"<<"\n\t[max gap to consolidate two matches]"<<endl;
+cerr<<"-pct-err-threshold"<<"\n\t[max percentage of errors in a match after the trim] OR -emp-pie-threshold"<<endl;
+cerr<<"-ma-threshold"<<"\n\t[specifies percentile to be drawn from trulyIBD data for MA calculations] OR -empirical-ma-threshold"<<endl;
+cerr<<"*"<<"\n\tNote that if both -emp-pie-threshold and empirical-ma-threshold are supplied, then -trueSNP and -trueCM will be ignored"<<endl;
+cerr<<"**"<<"\n\t-output-type [ must provide any of these. it can be"<<endl;
+cerr<<'\t'<<" MovingAverages  or Error1 or Error2 or Error3 or ErrorRandom1 " << endl;
+cerr<<'\t'<<" or ErrorRandom2 or Error3 or ErrorRandom3 or Full "<< endl;
+cerr<<'\t'<<" look at the description about how these works in wiki ]"<< endl;
+cerr<<"***"<<"\n\t(optional) -holdout-ped [new ped file path] -holdout-map [new map file]"<<endl;
+
+cerr<<"-holdout-threshold [threshold to drop a match with new ped file ]"<<endl;
+cerr<<"-holdout-missing [missing value representation in new ped file] "<< endl;
+
+cerr<<'\t'<<"-trueCM [ true match maximum cm length] " << endl;
+cerr<<'\t'<<"-trueSNP [ true match SNP length]"<< endl;
+cerr<<"****\t"<<"-PIE.dist.length [ can be MOL or any cm distance length "<< endl;
+cerr<<'\t'<<" please refer wiki for more details on how to use this option"<< endl;
+cerr<<'\t'<<"-count.gap.errors [ TRUE or FALSE to include gap errors in errors count ]"<< endl;
+	exit(0);
+}
+
+/*void helpShowParameters()
 {
 	cerr<< "flags:" << endl
 			<< " -pedfile [ped file ]" << endl
 			<< " -mapfile [map file ]" << endl
 			<< " -outfile [ out file ]"<<endl
-			<< " -genfile [ gen file ]"<<endl
+			<< " -geneticmapfile [ gen file ]"<<endl
 			<< " -samplefile [ sample file ]"<<endl
-			<< " -hapfile [ hap file ]"<<endl
+			<< " -hapsfile [ hap file ]"<<endl
 			<< '\t' << "-silent" << '\t' << "Suppress all output except for warnings and prompts." << endl
 			<< '\t' << "-bin_out" << '\t' << "Output in binary format to save space." << endl
 			<< '\t' << "-min_cm_initial" << '\t' << "Minimum length for match to be used for imputation (in cM or MB)." << endl
@@ -865,9 +1045,9 @@ void helpShowParameters()
 			<< '\t' << "-reduced" << '\t' << "output only reduced elements" << endl
 			<< '\t' << "-no_suffix" << '\t' << "use with -hapoloid to outputthe cell with no .0 or .1 suffix" << endl
 			<< '\t' << "--err_w" << '\t' << "use with -wextend to allow error matches like 1,2,3 etc in extending" << endl
-			<<'\t'	<< "-hap"	 <<'\t'	 << "if using hap file, use this flag. usuage: -hap <hapfilename.hap>  Must also supply \".sample\" and \".gen\" file using flags -sample and -gen"<< endl
-			<<'\t'	<< "-sample"	 <<'\t'	 << "if using hap file, use this flag for the corresponding sample file. usuage: -sample <samplefilename.sample>  Must also supply \".hap\" and \".gen\" file using flags -hap and -gen"<< endl
-			<<'\t'	<< "-gen"	 <<'\t'	 << "if using hap file, use this flag to supply the corresponding gen file. usuage: -gen <genfile.gen>  Must also supply \".hap\" and \".sample\" file using flags -hap and -sample"<< endl
+			<<'\t'	<< "-hapsfile"	 <<'\t'	 << "if using hap file, use this flag. usuage: -hapsfile <hapfilename.hap>  Must also supply \".sample\" and \".gen\" file using flags -sample and -geneticmapfile"<< endl
+			<<'\t'	<< "-sample"	 <<'\t'	 << "if using hap file, use this flag for the corresponding sample file. usuage: -sample <samplefilename.sample>  Must also supply \".hap\" and \".gen\" file using flags -hapsfile and -geneticmapfile"<< endl
+			<<'\t'	<< "-geneticmapfile"	 <<'\t'	 << "if using hap file, use this flag to supply the corresponding gen file. usuage: -geneticmapfile <genfile.gen>  Must also supply \".hap\" and \".sample\" file using flags -hapsfile and -sample"<< endl
 			<<"\n"<<endl
 			<<'\t'<<"-window [window width to calculate moving averages] "<< endl
 			<<'\t'<<"-gap [max gap to consolidate two matches]"<< endl
@@ -887,8 +1067,8 @@ void helpShowParameters()
 			<<'\t'<<"-PIE.dist.length [ can be MOL or any cm distance length "<< endl
 			<<'\t'<<" please refer wiki for more details on how to use this option"<< endl
 			<<'\t'<<"-count.gap.errors [ TRUE or FALSE to include gap errors in errors count ]"<< endl
-			<<'\t'<<"-ibd <threshold value>" <<"\t compute ibd2 and ibd4"<< endl;
+			<<'\t'<<"-ibd2 <threshold value>" <<"\t compute ibd2 and ibd4"<< endl;
 	exit(0);
-}
+}*/
 
 // end GERMLINE_0001.cpp

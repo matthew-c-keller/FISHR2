@@ -27,3 +27,4 @@ make IE_CALCULATOR
 #else
 #	echo"ie_calculator compiled successfully"
 #fi
+make GAP
