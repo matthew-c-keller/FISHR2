@@ -141,7 +141,8 @@ int main(int argc, char* argv[])
 				cerr<<"*                    Institute for Behavioral Genetics (IBG)                      *"<<endl;
 				cerr<<"*                       University of Colorado at Boulder                         *"<<endl;
 				cerr<<"***********************************************************************************"<<endl;
-				cerr<<"****************************\"./gap -help\" for Usage *****************************"<<endl;
+				cerr<<"****************************\"./FISHR2 -help\" for Usage *****************************"<<endl;
+				cerr<<"******For a complete worked through example, see \"FISHR2.complete.example.R\"*****"<<endl;
 				cerr<<endl;
 			    exit(0);
 		}
@@ -957,6 +958,7 @@ void helpShowParameters()
 					cerr<<"*                (C) 2014  Matthew C. Keller, Doug Bjelland, Piyush Sudip Patel   *"<<endl;
 					cerr<<"*                    Institute for Behavioral Genetics (IBG)                      *"<<endl;
 					cerr<<"*                       University of Colorado at Boulder                         *"<<endl;
+					cerr<<"******For a complete worked through example, see \"FISHR2.complete.example.R\"*****"<<endl;
 					cerr<<"***********************************************************************************"<<endl;
 					cerr<<endl<<endl<<endl;
 cerr<<"*For sample inputs please refer the README.md file*"<<endl<<endl;
