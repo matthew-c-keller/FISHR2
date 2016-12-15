@@ -52,6 +52,8 @@ const int MIS=9;
 const short PAR_M = 0;
 const short PAR_F = 1;
 extern bool IBD;
+extern int IBD2_4_COUNT;
+extern int TOTAL_IBD1_COUNT;
 // type for file format
 enum FileFormat{HAPS,PED,HM};
 // type for families

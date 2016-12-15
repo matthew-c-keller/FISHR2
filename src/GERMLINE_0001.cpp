@@ -27,6 +27,8 @@ bool BINARY_OUT = false;
 int MAX_ERR_HOM = 4;
 int MAX_ERR_HET = 1;
 int ERR_W=0;
+int IBD2_4_COUNT = 0; // used in FISHR
+int TOTAL_IBD1_COUNT =0;
 bool NO_SUFFIX=false;
 bool REDUCE=false;
 bool GERMLINE_OUTPUT = false;
@@ -110,7 +112,8 @@ int main(int argc, char* argv[])
 	grade_list2["-snpfile"] = "NULL";
 	grade_list2["-log-file"] = "NULL";
 	grade_list2["-ma-threshold"] = "NULL";
-	grade_list2["-empirical-ma-threshold"] = "NULL";
+	//grade_list2["-empirical-ma-threshold"] = "NULL";
+	grade_list2["-emp-ma-threshold"] = "NULL";
 	grade_list2["-PIE.dist.length"] = "NULL";
 	grade_list2["-count.gap.errors"] = "NULL";
 	bool help = false;
@@ -407,7 +410,7 @@ for (int i = 0; i < argc ; i++)
 			(strcmp(argv[i],"-trueCM")==0) || ( strcmp( argv[i],"-trueSNP" )==0) || (strcmp(argv[i],"-holdout-missing")==0) ||
 			(strcmp(argv[i],"-gap")==0) || (strcmp(argv[i],"-ma-snp")==0) || (strcmp(argv[i],"-pct-err-threshold")==0) ||
 			(strcmp(argv[i],"-emp-pie-threshold")==0) || (strcmp(argv[i],"-output-type")==0) || (strcmp(argv[i], "-snpfile") ==0) ||
-			(strcmp(argv[i],"-log-file")==0) || (strcmp(argv[i],"-ma-threshold")==0) ||(strcmp(argv[i],"-empirical-ma-threshold")==0 ) ||
+			(strcmp(argv[i],"-log-file")==0) || (strcmp(argv[i],"-ma-threshold")==0) ||(strcmp(argv[i],"-emp-ma-threshold")==0 ) ||
 			(strcmp(argv[i],"-PIE.dist.length")==0) || (strcmp(argv[i],"-count.gap.errors")==0 ) ||  (strcmp(argv[i],"-min_cm_final")==0  ) ||
 			(strcmp(argv[i],"-min_snp")==0))
 				  {
@@ -667,16 +670,6 @@ else
 {
 
 }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -961,62 +954,75 @@ void helpShowParameters()
 					cerr<<"******For a complete worked through example, see \"FISHR2.complete.example.R\"*****"<<endl;
 					cerr<<"***********************************************************************************"<<endl;
 					cerr<<endl<<endl<<endl;
-cerr<<"*For sample inputs please refer the README.md file*"<<endl<<endl;
-cerr<< "List of commands:" << endl;
-cerr<<"-pedfile"<<"\n\t-pedfile [pedfile ]"<<endl;
-cerr<<"-mapfile"<<"\n\t-mapfile [mapfile ]"<<endl;
-cerr<<"-geneticmapfile"<<"\n\t-geneticmapfile [geneticmapfile ]"<<endl;
+cerr<<"For sample inputs please refer the README.md file"<<endl<<endl;
+cerr<<"List of commands:" << endl;
+cerr<<"Required Input Format:"<<endl;
+cerr<<"(1):"<<endl;
+cerr<<"\t-pedfile [filename] -mapfile [filename]"<<endl;
+cerr<<"(2):"<<endl;
+cerr<<"\t-mapfile [filename] -hapsfile [filename] -samplefile [filename]"<<endl;
+/*cerr<<"(3):"<<endl;
+cerr<<"-geneticmapfile [name]"<<"\n\t-geneticmapfile [geneticmapfile ]"<<endl;
 cerr<<"-samplefile"<<"\n\t-samplefile [samplefile ]"<<endl;
-cerr<<"-hapsfile"<<"\n\t-hapsfile [hapsfile ]"<<endl;
+cerr<<"-hapsfile"<<"\n\t-hapsfile [hapsfile ]"<<endl;*/
 
-cerr<<"\n***************************************************************\n"<<endl;
+cerr<<"\n***************************GERMLINE FLAGS*******************************\n"<<endl<<endl;
 
-cerr<<"-silent"<<"\n\tSuppress all output except for warnings and prompts."<<endl;
-cerr<<"-bin_out"<<"\n\tOutput in binary format to save space."<<endl;
-cerr<<"-min_cm_initial"<<"\n\tMinimum length for match to be used for imputation (in cM or MB)."<<endl;
-cerr<<"-err_hom"<<"\n\tMaximum number of mismatching homozygous markers (per slice)."<<endl;
-cerr<<"-err_het"<<"\n\tMaximum number of mismatching heterozygous markers (per slice)."<<endl;
-cerr<<"-from_snp"<<"\n\tStart SNP (rsID)."<<endl;
-cerr<<"-to_snp"<<"\n\tEnd SNP (rsID)."<<endl;
-cerr<<"-map"<<"\n\tGenetic distance map."<<endl;
-cerr<<"-bits"<<"\n\tSlice size."<<endl;
-cerr<<"-homoz"<<"\n\tAllow self matches (homozygosity)."<<endl;
-cerr<<"-homoz-only"<<"\n\tLook for autozygous/homozygous segments only, does not detect IBD."<<endl;
-cerr<<"-haploid"<<"\n\tTreat input individual as two fully phased chromosomes with no recombination\n\t\toutput IDs with 0/1 suffix for chromosome destinction."<<endl;
-cerr<<"-h_extend"<<"\n\tExtend from seeds if *haplotypes* match."<<endl;
-cerr<<"-w_extend"<<"\n\tExtend, one marker at a time, beyond the boundaries of a found match."<<endl;
-cerr<<"-reduced"<<"\n\tOutput only reduced elements."<<endl;
-cerr<<"-no_suffix"<<"\n\tUse with -haploid to output the cell with no .0 or .1 suffix."<<endl;
-cerr<<"-err_w"<<"\n\tUse with -wextend to allow error matches like 1,2,3 etc in extending"<<endl;
-cerr<<"-hapsfile"<<"\n\tIf using hap file, use this flag. usuage: -hapsfile <hapfilename.hap>  Must also supply \".samplefile\" and \".mapfile\" file using flags -samplefile and -mapfile"<<endl;
-cerr<<"-samplefile"<<"\n\tIf using hapsfile, use this flag for the corresponding sample file. usage: -samplefile <samplefilename.sample>  Must also supply \".hapsfile\" and \".mapfile\" file using flags"<<endl;
+cerr<<"-silent"<<"\n\tSuppress all output except for warnings and prompts."<<endl<<endl;
+//cerr<<"-bin_out"<<"\n\tOutput in binary format to save space."<<endl;
+cerr<<"-min_cm_initial [value]"<<"\n\tMinimum length for match to be used for imputation (in cM or MB)."<<endl<<endl;
+cerr<<"-err_hom [value]"<<"\n\tMaximum number of mismatching homozygous markers (per slice)."<<endl<<endl;
+cerr<<"-err_het [value]"<<"\n\tMaximum number of mismatching heterozygous markers (per slice)."<<endl<<endl;
+//cerr<<"-from_snp"<<"\n\tStart SNP (rsID)."<<endl;
+//cerr<<"-to_snp"<<"\n\tEnd SNP (rsID)."<<endl;
+cerr<<"-map [name]"<<"\n\tGenetic distance map."<<endl<<endl;
+cerr<<"-bits [value]"<<"\n\tSlice size."<<endl<<endl;
+cerr<<"-homoz"<<"\n\tAllow self matches (homozygosity)."<<endl<<endl;
+cerr<<"-homoz-only"<<"\n\tLook for autozygous/homozygous segments only, does not detect IBD."<<endl<<endl;
+cerr<<"-haploid"<<"\n\tTreat input individual as two fully phased chromosomes with no recombination\n\toutput IDs with 0/1 suffix for chromosome destinction."<<endl<<endl;
+cerr<<"-h_extend"<<"\n\tExtend from seeds if *haplotypes* match."<<endl<<endl;
+cerr<<"-w_extend"<<"\n\tExtend, one marker at a time, beyond the boundaries of a found match."<<endl<<endl;
+//cerr<<"-reduced"<<"\n\tOutput only reduced elements."<<endl;
+cerr<<"-no_suffix"<<"\n\tUse with -haploid to output the cell with no .0 or .1 suffix."<<endl<<endl;
+//cerr<<"-err_w"<<"\n\tUse with -wextend to allow error matches like 1,2,3 etc in extending"<<endl;
+//cerr<<"-hapsfile"<<"\n\tIf using hap file, use this flag. usuage: -hapsfile <hapfilename.hap>  Must also supply \".samplefile\" and \".mapfile\" file using flags -samplefile and -mapfile"<<endl;
+//cerr<<"-samplefile"<<"\n\tIf using hapsfile, use this flag for the corresponding sample file. usage: -samplefile <samplefilename.sample>  Must also supply \".hapsfile\" and \".mapfile\" file using flags"<<endl;
 //cerr<<"-geneticmapfile"<<"\n\tOutput only reduced elements."<<endl;
 //<<'\t'	<< "-geneticmapfile"	 <<'\t'	 << "if using hap file, use this flag to supply the corresponding gen file. usuage: -geneticmapfile <genfile.gen>  Must also supply \".hap\" and \".sample\" file using flags -hapsfile and -sample"<< endl
 //<<"\n"<<endl
-cerr<<"-window"<<"\n\t-window value[window width to calculate moving averages]"<<endl;
-cerr<<"-ibd2"<<"\n\t-ibd2 <threshold value> \tCompute ibd2 and ibd4"<<endl;
-cerr<<"-log-file"<<"\n\t-log-file [log file name]"<<endl;
+
+cerr<<"\n***************************FISHR2 FLAGS*******************************\n"<<endl;
+
+cerr<<"-window [value]"<<"\n\t-window value[window width to calculate moving averages]"<<endl<<endl;
+cerr<<"-ibd2 [value]"<<"\n\t-ibd2 <threshold value> \tCompute ibd2 and ibd4"<<endl<<endl;
+cerr<<"-log-file [name]"<<"\n\t-log-file [log file name]"<<endl<<endl;
+cerr<<"-gap [value]"<<"\n\t[max gap to consolidate two matches]"<<endl<<endl;
+cerr<<"-emp-pie-threshold [value]"<<"\n\t[max percentage of errors in a match after the trim] OR -pct-err-threshold"<<endl<<endl;
+cerr<<"-emp-ma-threshold [value]"<<"\n\t[specifies percentile to be drawn from trulyIBD data for MA calculations] OR -ma-threshold "<<endl<<endl;
+cerr<<"-holdout-threshold [value ]"<<"\n\t threshold to drop a match with new ped file"<<endl<<endl;
+cerr<<"-holdout-missing [name] "<<"\n\t missing value representation in new ped file"<<endl<<endl;
+cerr<<"-trueCM [ value]" <<"\n\t true match maximum cm length]"<<endl<<endl;
+cerr<<"-trueSNP [ value]"<<"\n\t true match SNP length"<< endl<<endl;
+cerr<<"-PIE.dist.length [value]"<<"\n\t can be MOL or any cm distance length "<< endl<<endl;
+cerr<<"-count.gap.errors [TRUE or FALSE]"<<"\n\t to include gap errors in errors count ]"<< endl<<endl;
+cerr<<"-output-type finalOutput"<<endl<<endl;
 
 
-
-cerr<<"-gap"<<"\n\t[max gap to consolidate two matches]"<<endl;
-cerr<<"-pct-err-threshold"<<"\n\t[max percentage of errors in a match after the trim] OR -emp-pie-threshold"<<endl;
-cerr<<"-ma-threshold"<<"\n\t[specifies percentile to be drawn from trulyIBD data for MA calculations] OR -empirical-ma-threshold"<<endl;
-cerr<<"*"<<"\n\tNote that if both -emp-pie-threshold and empirical-ma-threshold are supplied, then -trueSNP and -trueCM will be ignored"<<endl;
-cerr<<"**"<<"\n\t-output-type [ must provide any of these. it can be"<<endl;
+/*
 cerr<<'\t'<<" MovingAverages  or Error1 or Error2 or Error3 or ErrorRandom1 " << endl;
 cerr<<'\t'<<" or ErrorRandom2 or Error3 or ErrorRandom3 or Full "<< endl;
 cerr<<'\t'<<" look at the description about how these works in wiki ]"<< endl;
 cerr<<"***"<<"\n\t(optional) -holdout-ped [new ped file path] -holdout-map [new map file]"<<endl;
+*/
 
-cerr<<"-holdout-threshold [threshold to drop a match with new ped file ]"<<endl;
-cerr<<"-holdout-missing [missing value representation in new ped file] "<< endl;
 
-cerr<<'\t'<<"-trueCM [ true match maximum cm length] " << endl;
-cerr<<'\t'<<"-trueSNP [ true match SNP length]"<< endl;
-cerr<<"****\t"<<"-PIE.dist.length [ can be MOL or any cm distance length "<< endl;
-cerr<<'\t'<<" please refer wiki for more details on how to use this option"<< endl;
-cerr<<'\t'<<"-count.gap.errors [ TRUE or FALSE to include gap errors in errors count ]"<< endl;
+cerr<<"\n***************************Additional Notes*******************************\n"<<endl<<endl;
+cerr<<"1. Note that if both -emp-pie-threshold and emp-ma-threshold are supplied, then -trueSNP and -trueCM will be ignored"<<endl;
+
+
+/*
+cerr<<'\t'<<" please refer wiki for more details on how to use this option"<< endl;*/
+
 	exit(0);
 }
 

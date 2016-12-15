@@ -1,6 +1,8 @@
 # FISHR2
 This is the newest version of FISHR which detects IBD segments between individuals.
 
+#For a For a complete worked through example, see  the following R Script:
+FISHR2.complete.example.R
 
 # FISHR2
 

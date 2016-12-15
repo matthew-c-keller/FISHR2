@@ -13,6 +13,7 @@
 #include <cfloat>
 #include "Consolidator.hpp"
 #include "ErrorCalculator.hpp"
+#include "BasicDefinitions.h"
 
 //using namespace std;
 
@@ -732,8 +733,20 @@ if (extendSnp != 0)
   //  e_obj.log(ibg_str);
   e_obj.log(ma_drop_str);
   e_obj.log(pie_drop_str);
+
+  //std::cerr<<IBD2_4_COUNT<<"\t"<<IBD<<std::endl;
+
+  if (!IBD)
+  {
   final_sh_str = "Total number of SH that were not dropped is: " + NumberToString(not_removed);
   e_obj.log(final_sh_str);
+  }
+  else
+  {
+	  //final_sh_str = "Total number of SH that were not dropped is: " + NumberToString(not_removed+IBD2_4_COUNT);
+  }
+  TOTAL_IBD1_COUNT = not_removed;
+  //e_obj.log(final_sh_str);
 }//end performTrim
 
 void Consolidator::performHoldOutTrim( ErrorCalculator& ecal, 
