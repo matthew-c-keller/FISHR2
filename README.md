@@ -40,7 +40,7 @@ Click clone or download -> Download zip -> Extract zip file.
 
 # To Compile FISHR2: 
 - Navigate to folder where the makefile exists and type 'make' in your command line. 
-- This will create a binary file FISHR2 in the directory.
+- This will create a binary file FISHR2 in the "binaries" directory.
 - To execute the program refer to the examples below or the R example file above.
 
 
@@ -50,7 +50,7 @@ See Instructions.txt
 - If the boost libraries are missing on your system, FISHR2 will not properly compile. 
 FIX: sudo apt-get install libboost-all-dev.
 This will install boost in your Unix/mac system.
-- If there is a problem installing boost, there is a binary file called 'FISHR2' already included. You needn't compile it. You can just start using it. The examples below use this precompiled version of FISHR2.
+- If there is a problem installing boost, there is a binary file called 'FISHR2' already included that may work on your system. You needn't compile it. You can just start using it. If this precompiled version does not work on your system, you will need to try to compile it yourself; you might ask a system administrator for help if you are having difficulties.
 
 
 
