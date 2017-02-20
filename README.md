@@ -7,13 +7,15 @@ FISHR2 is the newest version of the FISHR (Find IBD Shared Haplotypes Rapidly) p
 
 3) IBD2 and IBD4  shared segments (where 2 or 4 IBD segments exist at the same location between two individuals) can now be detected by FISHR2.
 
-4) use "./FISHR2 -help" command to view the list of flags and their usuage. 
 
 
 # Using FISHR2
 We highly recommend looking at a complete worked through example, which we supply in the following R script: FISHR2.complete.example.R
 
 The FISHR2 manual is available on the main repository (FISHR2.manual.pdf).
+
+Use "./FISHR2 -help" command to view the list of flags and their usage. 
+
 
 
 # To Download:
@@ -42,11 +44,11 @@ Click clone or download -> Download zip -> Extract zip file.
 
 Known Issues:
 See Instructions.txt
-- Don't have git installed, see the "To Download" above for instructions.
-- Boost libraries missing:
+- If you don't have git installed, see the "To Download" section above for instructions.
+- If the boost libraries are missing on your system, FISHR2 will not properly compile. 
 FIX: sudo apt-get install libboost-all-dev.
 This will install boost in your Unix/mac system.
-- If thre's a problem installing boost, there is a binary  file called 'FISHR2' already included. You needn't compile it. You can just start using it. See the Samples Below.
+- If there is a problem installing boost, there is a binary file called 'FISHR2' already included. You needn't compile it. You can just start using it. The examples below use this precompiled version of FISHR2.
 
 
 
