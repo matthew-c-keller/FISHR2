@@ -13,30 +13,31 @@
 
 ##############################
 # PROGRAMS REQUIRED BY THIS SCRIPT
-#We assume that you download and compile (or use the precompiled binaries) the following software for this script to run. It goes without saying that you have R installed on your machine and that you're using this script in R!
+#We assume that you download and compile (or use the precompiled binaries) the following software for this script to run. It goes without saying that you have R installed on your machine and that you're using this script in R.
 
 #1) FISHR2 - https://github.com/matthew-c-keller/FISHR2
 
-#2) GERMLINE2 - https://github.com/matthew-c-keller/GERMLINE - NOTE: this is a modified version of the original GERMLINE software
+#2) GERMLINE2 - https://github.com/matthew-c-keller/GERMLINE2 - NOTE: this is a modified version of the original GERMLINE software. This does NOT need to be installed for FISHR2 to work, but it does need to be installed if you wish to use parameter_finder utility. Install it from github using, e.g., git clone https://github.com/matthew-c-keller/GERMLINE2.git. Here, we assume that GERMLINE2 is installed in your /FISHR2/utilities folder. If you install it somewhere else, you'll need to modify the script below to provide the correct file path to where you've installed it.
 
-#3) parameter_finder - installed when you installed FISHR2
+#3) parameter_finder - installed when you installed FISHR2 and exists in the utilities folder, although it needs to be compiled using "make". It is used for finding optimal FISHR2 parameters.
 
-#4) gap - https://github.com/rtahmasbi/GAP -  - formats from SHAPEIT2 to phased PED file expected by GERMLINE2
+#4) gap - https://github.com/rtahmasbi/GAP - installed when you installed FISHR2 and exists in the utilities folder, although it needs to be compiled using "make". Formats from SHAPEIT2 to phased PED file expected by GERMLINE2
 
-#This script assumes that you have installed FISHR2 and your working directory is the one created when you clone FISHR2. We assume that you install GERMLINE2 and gap in that directory. If you install these programs in other locations, change the script below accordingly to indicate where those programs are (or put them in a directory that is in your $PATH and just call them directly).
-
-##############################
-
-
-
-
-
+#This script assumes that you have installed and compiled FISHR2, GERMLINE2, and gap and that your working directory is the one where all the example data is located (FISHR2/src). We assume that you install GERMLINE2 and gap in the utilities directory. If you install these programs in other locations, change the script below accordingly to indicate where those programs are (or put them in a directory that is in your $PATH and just call them directly).
 
 ##############################
-#DATA INCLUDED IN THE FOLDER FOR THIS EXAMPLE SCRIPT
+
+
+
+
+
+
+##############################
+#DATA INCLUDED IN THE FOLDER FOR THIS EXAMPLE SCRIPT (in the src folder)
+
 #Test.bed/bim/fam files. NOTE: the 3rd column of the bim file has cM positions, which the user will typically need to figure out for their particular SNP set themselves.
-#hapmap.genmap15.txt - genetic map file
-#For additional information on the genetic map files, see https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.html#gmap
+
+#hapmap.genmap15.txt - genetic map file. For additional information on the genetic map files, see https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.html#gmap
 
 
 #Test.SI.haps & Test.SI.sample - files created by SHAPEIT; to save you time (and not have to wait for SHAPEIT to finish phasing the data), we've supplied these files for you.
@@ -87,7 +88,7 @@
 #Note: you can of course use whatever program you want to phase it, but it's up to you to convert the output of that program into SHAPEIT output or phased PED files. For a phasing pipeline from BEAGLE to phased PED file, see http://www.cs.columbia.edu/~gusev/germline/.
 
 #Set working directory
-setwd("/path/to/directory/FISHR2") # obviously, change /path/to/directory here to wherever you put FISHR2 & the utilitites
+setwd("/path/to/directory/FISHR2/src") # obviously, change /path/to/directory here to wherever you put FISHR2 folder
 
 #We begin with Test.bed/bim/fam files as well as a genetic map file (hapmap.genmap15.txt)
 #For additional information on the genetic map files, see https://mathgen.stats.ox.ac.uk/genetics_software/shapeit/shapeit.html#gmap
@@ -118,9 +119,9 @@ setwd("/path/to/directory/FISHR2") # obviously, change /path/to/directory here t
 #This is useful only if you're using gl.parameter finder & GERMLINE2 to find optimal parameters for running FISHR2
 #Otherwise, it's fine to leave the files in the SHAPEIT format for input into FISHR2
 
-#Use one of our utility programs to convert SHAPEIT output to what GERMLINE wants
+#Use one of our utility programs to convert SHAPEIT output to what GERMLINE2 wants. The following two commands will over-write the existing Test.SI.ped and Test.SI.map files
 #See also https://github.com/rtahmasbi/GAP for newest versions
-system("./utilities/gap/gap --haps2ped --file Test.SI --code01 --out Test.SI")
+system("../utilities/gap/gap --haps2ped --file Test.SI --code01 --out Test.SI")
 
 #create a corresponding map file by changing the bim file. NOTE: This map file has cM distances in 3rd column 
 system("cut -f1,2,3,4 Test.bim > Test.SI.map")
@@ -139,7 +140,7 @@ system("cut -f1,2,3,4 Test.bim > Test.SI.map")
 #Note again: the PED file must be phased for this to work
 #run GERMLINE to identify regions that are almost certainly IBD, at least in the middle
 #If you get a library missing error, Navigate to the Germline2 folder and compile the program by issuing the make command.
-system("./GERMLINE2/GERMLINE2 -pedfile Test.SI.ped -mapfile Test.SI.map -outfile Test.SI -bin_out -err_hom 0 -err_het 0 -reduced -bits 120 -min_m 8 -w_extend")  #ignore a warning that "stream is not good" if you get it
+system("../utilities/GERMLINE2/GERMLINE2 -pedfile Test.SI.ped -mapfile Test.SI.map -outfile Test.SI -bin_out -err_hom 0 -err_het 0 -reduced -bits 120 -min_m 8 -w_extend")  #ignore a warning that "stream is not good" if you get it
 
 #-pedfile - a PHASED pedfile. 
 #-mapfile - a map file with cM distances in 3rd column
@@ -163,7 +164,7 @@ system("less Test.SI.log")
 #3) ***OPTIONAL*** GL.PARAMTER.FINDER TO FIND PIE & MA THRESHOLDS TO USE
 #This assumes you have compiled the parameter_finder utility. You can also use a precompiled version in ./utilities/parameter_finder_binaries
 
-system("./utilities/parameter_finder/parameter_finder -bmatch Test.SI.bmatch -bsid Test.SI.bsid -bmid Test.SI.bmid -ped-file Test.SI.ped -window 50 -cut-value 0.5 -reduced 500 8 -output-type Error1 -log-file Test.SI.paramfind | gzip > Test.SI.PF.gz")
+system("../utilities/parameter_finder/parameter_finder -bmatch Test.SI.bmatch -bsid Test.SI.bsid -bmid Test.SI.bmid -ped-file Test.SI.ped -window 50 -cut-value 0.5 -reduced 500 8 -output-type Error1 -log-file Test.SI.paramfind | gzip > Test.SI.PF.gz")
 
 #Inputs to gl_parameter_finder:
 #-bmatch - the binary output (from -bin_out) of GERMLINE; has one SH per row
@@ -230,7 +231,7 @@ x2$would.keep1 <- x2$random_ma_max < .045 & x2$random_pie < .015
 summary(x2$would.keep1) #72/48210, estimate of 1-specificity
 sum(x2$would.keep1)/nrow(x2) #72/48210 = .00149 is estimate of 1-specificity for this threshold for long SHs. So we would make very few wrong calls proportionately. Nevertheless, because the base rate of non-IBD is so much (~200 times) higher than IBD, the PPV can still be <<1, even with such high sensitivity and specificity values. So with these values, we might predict a PPV of ~.80 with a 200 folder higher rate of non-IBD vs. IBD.
 
-#These seem like decent thresholds. Note that this method doesn't account for the increasing uncertainty that occurs at SH endpoints, where IEs begin to accumulate. In real data and for short IBD segments, the IEs ocurring at endpoints make up a greater and greater share of the total IBD segment length and increase the false negative and false positive rate over what's estimated here.
+#These seem like decent thresholds. Note that this estimate doesn't account for the increasing uncertainty that occurs at SH endpoints, where IEs begin to accumulate. In real data and for short IBD segments, the IEs ocurring at endpoints make up a greater and greater share of the total IBD segment length and increase the false negative and false positive rate over what's estimated here.
 
 ###############
 
@@ -248,7 +249,11 @@ sum(x2$would.keep1)/nrow(x2) #72/48210 = .00149 is estimate of 1-specificity for
 ###############
 #6) ***ALTERNATIVE 1*** RUN FISHR2 ON PHASED PED FILE
 
-system("./binaries/FISHR2 -pedfile Test.SI.ped -mapfile Test.SI.map -bits 60 -err_hom 0 -err_het 0 -min_cm_initial 1.5 -homoz -w_extend -h_extend -min_cm_final 3 -min_snp 64 -window 50 -gap 5 -output-type finalOutput -count.gap.errors TRUE -emp-pie-threshold 0.015 -emp-ma-threshold 0.045 -log-file Test.8k -germline_output ./ped.germ |gzip > Test.8k.PedFormat.FISHR2.gz")
+#this took ~5 minutes on my machine
+system("../binaries/FISHR2 -pedfile Test.SI.ped -mapfile Test.SI.map -bits 60 -err_hom 0 -err_het 0 -min_cm_initial 1.5 -homoz -w_extend -h_extend -min_cm_final 3 -min_snp 64 -window 50 -gap 5 -output-type finalOutput -count.gap.errors TRUE -emp-pie-threshold 0.015 -emp-ma-threshold 0.045 -log-file Test.8k -germline_output ./ped.germ |gzip > Test.8k.PedFormat.FISHR2.gz")
+
+#If you're short on time, below is a very fast alternative that calls only very long SHs:
+#system("../binaries/FISHR2 -pedfile Test.SI.ped -mapfile Test.SI.map -bits 200 -err_hom 0 -err_het 0 -min_cm_initial 3 -homoz -w_extend -h_extend -min_cm_final 5 -min_snp 200 -window 50 -gap 5 -output-type finalOutput -count.gap.errors TRUE -emp-pie-threshold 0.015 -emp-ma-threshold 0.045 -log-file Test.8k -germline_output ./ped.germ |gzip > Test.8k.PedFormat.FISHR2.gz")
 
 
 #DESCRIPTION OF PARAMETER
@@ -275,7 +280,7 @@ system("./binaries/FISHR2 -pedfile Test.SI.ped -mapfile Test.SI.map -bits 60 -er
 
 #CHANGE
 system("less Test.8k.log")
-#you should have identified 276,556 IBD segments > 3cM in length and that passed the PIE threshold of .015 and MA threshold of .045 suggested above. GERMLINE2 originally detected 2,236,826 segments > 1.5 cM, and these were passed on to FISHR. 935,114 of these were dropped straight off (after any merging 80,842 separated by fewer than 5 SNPs), then 944,265 were dropped that were originally > 3cM but that trimming them based on the Moving Average of IEs made them < 3cM, and finally 49 (only) were removed because they had an overall proportion of IEs (PIE) > .015.
+#you should have identified 392,994 IBD segments > 3cM in length and that passed the PIE threshold of .015 and MA threshold of .045 suggested above. GERMLINE2 originally detected 3,709,454 segments > 1.5 cM (the min_cm_initial parameter), and these were passed on to FISHR. 1,609,436 of these were dropped straight off (after any merging 80,746 separated by fewer than 5 SNPs), then 1,626,234 were dropped that were originally > 3cM but that trimming them based on the Moving Average of IEs made them < 3cM, and finally 44 (only) were removed because they had an overall proportion of IEs (PIE) > .015. Note that the "Total time" output by the algorithm in the log file is that used by the FISHR part of the program and does not consider the initial and longer GERMLINE part of the algorithm.
 
 ###############
 
@@ -287,8 +292,8 @@ system("less Test.8k.log")
 ###############
 #7) ***ALTERNATIVE 2*** RUN FISHR2 ON PHASED SHAPEIT FORMATED DATA
 
-
-system("./binaries/FISHR2 -mapfile Test.SI.map -samplefile Test.SI.sample -hapsfile Test.SI.haps -bits 60 -err_hom 0 -err_het 0 -min_cm_initial 1.5 -homoz -w_extend -h_extend -min_cm_final 3 -min_snp 64 -window 50 -gap 5 -output-type finalOutput -count.gap.errors TRUE -emp-pie-threshold 0.015 -emp-ma-threshold 0.045 -log-file SI.Test.8k |gzip > Test.8k.SIFormat.FISHR2.gz")
+#took ~ 5 minutes on my machine
+system("../binaries/FISHR2 -mapfile Test.SI.map -samplefile Test.SI.sample -hapsfile Test.SI.haps -bits 60 -err_hom 0 -err_het 0 -min_cm_initial 1.5 -homoz -w_extend -h_extend -min_cm_final 3 -min_snp 64 -window 50 -gap 5 -output-type finalOutput -count.gap.errors TRUE -emp-pie-threshold 0.015 -emp-ma-threshold 0.045 -log-file SI.Test.8k |gzip > Test.8k.SIFormat.FISHR2.gz")
 
 #PARAMETERS AS ABOVE EXCEPT:
 #-mapfile - name of the mapfile; identical to the one used above when running FISHR2 on ped/map file. Note that SHAPEIT does not produce this file - you the user must create this (it's easily created if you phased your data using SHAPEIT from the *bim file)
@@ -308,14 +313,14 @@ system("less SI.Test.8k.log")
 ###############
 #8) ***ALTERNATIVE 3*** RUN FISHR2 ON PHASED SHAPEIT FORMATED DATA AS ABOVE, BUT GET IBD2 AND IBD4 INFORMATION
 
-
-system("./binaries/FISHR2 -mapfile Test.SI.map -samplefile Test.SI.sample -hapsfile Test.SI.haps -bits 60 -err_hom 0 -err_het 0 -min_cm_initial 1.5 -homoz -w_extend -h_extend -min_cm_final 3 -min_snp 64 -window 50 -gap 5 -output-type finalOutput -count.gap.errors TRUE -emp-pie-threshold 0.015 -emp-ma-threshold 0.045 -ibd2 2 -log-file SI.Test.8k.ibd2 |gzip > Test.8k.SIFormat.FISHR2.ibd2.gz")
+#takes a bit longer than above
+system("../binaries/FISHR2 -mapfile Test.SI.map -samplefile Test.SI.sample -hapsfile Test.SI.haps -bits 60 -err_hom 0 -err_het 0 -min_cm_initial 1.5 -homoz -w_extend -h_extend -min_cm_final 3 -min_snp 64 -window 50 -gap 5 -output-type finalOutput -count.gap.errors TRUE -emp-pie-threshold 0.015 -emp-ma-threshold 0.045 -ibd2 2 -log-file SI.Test.8k.ibd2 |gzip > Test.8k.SIFormat.FISHR2.ibd2.gz")
 
 #PARAMETERS AS ABOVE EXCEPT:
 #-ibd2 2 - this is the minimum cM threshold for IBD2 & IBD4 segments; typically, we want this about the same length or a bit shorter than the -min_cm_final argument. The moving average for detecting IBD2 and IBD4 segments is set at the value of emp-ma-threshold
 
 system("less SI.Test.8k.ibd2.log")
-#the output is identical to the above
+#the output is almost the same as above, except that we have discovered 398,519 SHs, 5,525 more than we had last time. These additional 5,525 SHs are IBD2 and IBD4 SHs. 
 
 ###############
 
@@ -329,7 +334,7 @@ system("less SI.Test.8k.ibd2.log")
 #9) Look at FISHR2 output
 
 ff <- read.table(gzfile("Test.8k.SIFormat.FISHR2.gz"),header=FALSE,colClasses=c("character","character",rep("numeric",4)))
-nrow(ff) #276556
+nrow(ff) #392,994
 names(ff) <- c('id1','id2','start','end','snps','cm')
 
 #look at distribution of lengths
@@ -343,18 +348,19 @@ hist(ff$mdpt,breaks=100,col='blue') #quite a bit of variability across the chrom
 
 # Look at IBD2/4 output
 ffibd2 <- read.table(gzfile("Test.8k.SIFormat.FISHR2.ibd2.gz"),header=FALSE,colClasses=c("character","character",rep("numeric",4)))
-nrow(ffibd2) #277804, so 277804-276556 = 1248 IBD2 or IBD4 segments
+nrow(ffibd2) #398519
+nrow(ffibd2) - nrow(ff) # so 398519-392994 = 5525 IBD2 or IBD4 segments
 names(ffibd2) <- c('id1','id2','start','end','snps','cm','ibd')
 summary(ffibd2)
-summary(as.factor(ffibd2$ibd)) #276556 IBD1 segments, 1228 IBD2, and 20 IBD4
+summary(as.factor(ffibd2$ibd)) #392994 IBD1 segments, 5413 IBD2, and 112 IBD4
 
 
 #what kind of numbers of IBD2 & IBD4 do we expect given IBD1 numbers?
 npair <- (8000*7999)/2
-prob.ibd <- 276556/npair
-(prob.ibd^2)*npair #=2390=the number of IBD2 we expect, which is somewhat smaller than the number observed (1248), perhaps due to a higher false negative rate for detecting IBD2.
-(prob.ibd^3)*npair #=20=the number of IBD4 we expect, which is exactly what is observed for IBD4
-#This is to the 3rd power because 1) probability that 2 haplotypes between two people are IBD; 2) probability that the other 2 haplotypes are IBD given the first 2 are and; 3) probability that those two pair of haplotypes are the same (i.e., are themselves IBD). It would be a mistake to think this should be to the 4th power.
+prob.ibd <- 392994/npair
+(prob.ibd^2)*npair #=4826.9=the number of IBD2 we expect, which is very close to the number observed (5413)
+(prob.ibd^3)*npair #=59.3=the number of IBD4 we expect, which is close to what is observed for IBD4 (112)
+#This is to the 3rd power because = probability that 2 haplotypes between two people are IBD * probability that the other 2 haplotypes are IBD given the first 2 are * probability that those two pair of haplotypes are the same (i.e., are themselves IBD). It would be a mistake to think this should be to the 4th power.
 ###############
 
 
