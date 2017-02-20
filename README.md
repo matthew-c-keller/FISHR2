@@ -14,7 +14,7 @@ We highly recommend looking at a complete worked through example, which we suppl
 
 The FISHR2 manual is available on the main repository (FISHR2.manual.pdf).
 
-The original publication describing FISHR v.1 describes the basic algorithm FISHR2 also uses and compares its performance to several leading IBD detection algorithms. This manuscript (doi:10.1038/ejhg.2017.6) is currently in press and is or will be available at http://matthewckeller.com/html/publications.html once published. It can also be obtained as an advanced online publication at http://www.nature.com/ejhg/journal/vaop/ncurrent/pdf/ejhg20176a.pdf
+The original publication on FISHR v.1 describes the basic algorithm FISHR2 also uses and compares its performance to several leading IBD detection algorithms. This manuscript (doi:10.1038/ejhg.2017.6) is currently in press and is or will be available at http://matthewckeller.com/html/publications.html once published. It can also be obtained as an advanced online publication at http://www.nature.com/ejhg/journal/vaop/ncurrent/pdf/ejhg20176a.pdf
 
 Use "./FISHR2 -help" command to view the list of flags and their usage. 
 
