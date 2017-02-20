@@ -1,5 +1,5 @@
 # FISHR2
-FISHR2 is the newest version of the FISHR (Find IBD Shared Haplotypes Rapidly) program and supplants the old version, FISHR. FISHR2 detects IBD segments between individuals from genomewide SNP data. It is implemented in C++ and designed to work on a UNIX/LINUX environment only. Major changes from V1:
+FISHR2 is the newest version of the FISHR (Find IBD Shared Haplotypes Rapidly) program and supplants the old version, FISHR. FISHR2 detects IBD segments between individuals from genomewide SNP data. It is implemented in C++ and designed to work on a UNIX/LINUX environment. Major changes from V1:
 
 1) Can be used directly on SHAPEIT formatted (HAPS/SAMPLE) data in addition to the "phased PED" file format used by GERMLINE and FISHR v.1. 
 
