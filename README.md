@@ -5,7 +5,7 @@ FISHR2 is the newest version of the FISHR (Find IBD Shared Haplotypes Rapidly) p
 3) no outfile or bin_out
 4) use "./FISHR2 -help" command to view the list of flags and their usuage. 
 
-#For a For a complete worked through example, see  the following R Script:
+# For a For a complete worked through example, see  the following R Script:
 FISHR2.complete.example.R
 
 
