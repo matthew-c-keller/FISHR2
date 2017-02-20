@@ -5,7 +5,7 @@ FISHR2 is the newest version of the FISHR (Find IBD Shared Haplotypes Rapidly) p
 
 2) Running FISHR2 is now a single-step process. The user runs FISHR2 directly on the phased data rather than running GERMLINE2 first on the phased data and then FISHR on the GERMLINE output.
 
-3) IBD2 and IBD4 (where 2 or 4 IBD segments exist at the same location between two individuals) shared segments can now be called.
+3) IBD2 and IBD4  shared segments (where 2 or 4 IBD segments exist at the same location between two individuals) can now be detected by FISHR2.
 
 4) use "./FISHR2 -help" command to view the list of flags and their usuage. 
 
