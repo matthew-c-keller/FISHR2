@@ -1,16 +1,13 @@
 # FISHR2
-This is the newest version of FISHR which detects IBD segments between individuals.
-
-#For a For a complete worked through example, see  the following R Script:
-FISHR2.complete.example.R
-
-# FISHR2
-
-This is the newest version of the FISHR (Find IBD Shared Haplotypes Rapidly) program. Major changes from V1:
+FISHR2 is the newest version of the FISHR (Find IBD Shared Haplotypes Rapidly) program and supplants the old version, FISHR. FISHR2 detects IBD segments between individuals from genomewide SNP data. It is implemented in C++ and designed to work on a UNIX/LINUX environment only. Major changes from V1:
 1) Can be used with -hapsfile, -sample file, -geneticmapfile
 2) Always reduced
 3) no outfile or bin_out
 4) use "./FISHR2 -help" command to view the list of flags and their usuage. 
+
+#For a For a complete worked through example, see  the following R Script:
+FISHR2.complete.example.R
+
 
 To Download:
 - 1. In your terminal write  
